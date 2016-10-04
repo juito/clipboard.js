@@ -42,15 +42,17 @@ class Clipboard extends Emitter {
      * @param {Event} e
      */
     onClick(e) {
+        const trigger = e.delegateTarget || e.currentTarget;
+
         if (this.clipboardAction) {
             this.clipboardAction = null;
         }
 
         this.clipboardAction = new ClipboardAction({
-            action  : this.action(e.target),
-            target  : this.target(e.target),
-            text    : this.text(e.target),
-            trigger : e.target,
+            action  : this.action(trigger),
+            target  : this.target(trigger),
+            text    : this.text(trigger),
+            trigger : trigger,
             emitter : this
         });
     }
@@ -68,7 +70,7 @@ class Clipboard extends Emitter {
      * @param {Element} trigger
      */
     defaultTarget(trigger) {
-        let selector = getAttributeValue('target', trigger);
+        const selector = getAttributeValue('target', trigger);
 
         if (selector) {
             return document.querySelector(selector);
@@ -103,7 +105,7 @@ class Clipboard extends Emitter {
  * @param {Element} element
  */
 function getAttributeValue(suffix, element) {
-    let attribute = `data-clipboard-${suffix}`;
+    const attribute = `data-clipboard-${suffix}`;
 
     if (!element.hasAttribute(attribute)) {
         return;
@@ -112,4 +114,4 @@ function getAttributeValue(suffix, element) {
     return element.getAttribute(attribute);
 }
 
-export default Clipboard;
+module.exports = Clipboard;
